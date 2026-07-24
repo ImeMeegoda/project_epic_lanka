@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/quote_icon.dart';
+import 'favorites_screen.dart';
 import 'home_screen.dart';
 import 'quotes_list_screen.dart';
 
@@ -13,9 +14,12 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+  // Main bottom navigation tabs for the app.
+  // Favorites is the extra training feature in this sandbox app.
   final List<Widget> _screens = const [
     HomeScreen(),
     QuotesListScreen(),
+    FavoritesScreen(),
   ];
 
   @override
@@ -35,15 +39,42 @@ class _MainScreenState extends State<MainScreen> {
         selectedFontSize: 13,
         unselectedFontSize: 13,
         type: BottomNavigationBarType.fixed,
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: SizedBox(height: 28, child: Icon(Icons.home, size: 28)),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: const Padding(padding: EdgeInsets.only(top: 4), child: SizedBox(height: 28, width: 28, child: Center(child: QuoteIcon(color: Colors.grey, size: 28)))),
-            activeIcon: const Padding(padding: EdgeInsets.only(top: 4), child: SizedBox(height: 28, width: 28, child: Center(child: QuoteIcon(color: Color(0xFF5AB2FF), size: 28)))),
+            icon: Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: SizedBox(
+                height: 28,
+                width: 28,
+                child: Center(child: QuoteIcon(color: Colors.grey, size: 28)),
+              ),
+            ),
+            activeIcon: Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: SizedBox(
+                height: 28,
+                width: 28,
+                child: Center(
+                  child: QuoteIcon(color: Color(0xFF5AB2FF), size: 28),
+                ),
+              ),
+            ),
             label: 'Quotes',
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              height: 28,
+              child: Icon(Icons.favorite_border, size: 28),
+            ),
+            activeIcon: SizedBox(
+              height: 28,
+              child: Icon(Icons.favorite, size: 28),
+            ),
+            label: 'Favorites',
           ),
         ],
       ),

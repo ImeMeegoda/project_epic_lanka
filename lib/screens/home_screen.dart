@@ -1,46 +1,28 @@
 import 'package:flutter/material.dart';
-import '../models/quote.dart';
-import '../services/quote_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../presentation/cubit/quote_cubit.dart';
+import '../services/quote_repository.dart';
 import '../widgets/shimmer_loading.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key, this.repository});
+
+  final QuoteRepository? repository;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    final quoteRepository = repository ?? QuoteRepositoryImpl();
+
+    return BlocProvider(
+      create: (_) => QuoteCubit(quoteRepository)..loadRandomQuote(),
+      child: const HomeView(),
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final QuoteService _quoteService = QuoteService();
-  Quote? _quote;
-  bool _isLoading = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchRandomQuote();
-  }
-
-  Future<void> _fetchRandomQuote() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final quote = await _quoteService.getRandomQuote();
-      setState(() {
-        _quote = quote;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = 'Failed to load quote. Please try again.';
-        _isLoading = false;
-      });
-    }
-  }
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,62 +42,67 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: _buildContent(),
+              child: BlocBuilder<QuoteCubit, QuoteState>(
+                builder: (context, state) {
+                  if (state is QuoteLoading || state is QuoteInitial) {
+                    return const HomeShimmer();
+                  }
+
+                  if (state is QuoteError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            state.message,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () =>
+                                context.read<QuoteCubit>().loadRandomQuote(),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  final loadedState = state as QuoteLoaded;
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '“${loadedState.quote.quote}”',
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          '- ${loadedState.quote.author}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    if (_isLoading) {
-      return const HomeShimmer();
-    }
-
-    if (_error != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _error!,
-              style: const TextStyle(fontSize: 16, color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _fetchRandomQuote,
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '“${_quote!.quote}”',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '- ${_quote!.author}',
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.black54,
-            ),
-          ),
-        ],
       ),
     );
   }

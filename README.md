@@ -1,57 +1,84 @@
 # Quotes App
 
-A Flutter application that displays inspirational quotes using the DummyJSON Quotes API.
+A Flutter quote viewer built around a clean layered structure with routing, state management, repository access, and local persistence.
+
+## What is included
+
+This version of the app now includes:
+
+- Splash flow and router-based navigation
+- Home screen with a random quote fetch flow
+- Quotes list screen with quote cards and detail navigation
+- Quote detail screen with favorite toggle support
+- Favorites screen for saved quotes
+- Recent quote cache + favorites persistence using local storage
+- Typed repository/service separation for cleaner app architecture
 
 ## How to Run
 
-1. Make sure you have Flutter installed (version 3.41.6 or later)
-2. Clone the repository
-3. Run `flutter pub get` to install dependencies
-4. Run `flutter run` to launch the app on your connected device or emulator
+1. Make sure Flutter is installed
+2. Open the project folder
+3. Run `flutter pub get`
+4. Run `flutter run`
 
-## Flutter Version & Packages
+## Main Packages
 
-- **Flutter**: 3.41.6 (stable channel)
-- **Dart**: 3.11.4
-- **Packages used**:
-  - `http: ^1.2.1` - For making API requests to the DummyJSON API
-  - `cupertino_icons: ^1.0.8` - Default icon pack
+- `flutter_bloc` for state-driven screen behavior
+- `equatable` for immutable state comparison
+- `go_router` for typed route handling
+- `http` for remote API requests
+- `shared_preferences` for recent quote caching
+- `flutter_secure_storage` for favorites persistence
 
-## Features
+## App Flow
 
-- **Splash Screen**: Shows the app icon and title before navigating to the home screen
-- **Home Screen (Quote of the Day)**: Displays a random quote fetched from the API
-- **Quotes List Screen**: Shows a scrollable list of quotes in card format
-- **Quote Detail Screen**: Full view of a selected quote with back navigation
+- `main.dart` starts the app and configures the router
+- `quote_repository.dart` provides the repository contract
+- `quote_service.dart` handles the DummyJSON remote calls
+- `quote_storage_service.dart` stores favorite quotes and recent cache locally
+- `home_screen.dart` and `quotes_list_screen.dart` present quote data through Cubit state layers
+- `quote_detail_screen.dart` allows interaction with favorites and stores recent viewing history
+- `favorites_screen.dart` shows the saved favorites list
 
-## API
+## API Source
 
-All data is fetched from [DummyJSON Quotes API](https://dummyjson.com/docs/quotes):
+The app uses the DummyJSON Quotes API:
 
-- `GET /quotes/random` - Random quote for home screen
-- `GET /quotes?limit=20&skip=0` - Paginated list of quotes
-- Quote detail is passed via navigation (no additional API call needed)
+- `GET /quotes/random`
+- `GET /quotes?limit=20&skip=0`
 
 ## Project Structure
 
-```
+```text
 lib/
-  main.dart                  - App entry point and theme configuration
+  main.dart
+  app/
+    router.dart
+  core/
+    errors/
+      quote_failure.dart
   models/
-    quote.dart               - Quote data model
-  services/
-    quote_service.dart       - API service for fetching quotes
+    quote.dart
+  presentation/
+    cubit/
+      quote_cubit.dart
+      quote_list_cubit.dart
   screens/
-    splash_screen.dart       - Splash/loading screen
-    home_screen.dart         - Quote of the Day screen
-    quotes_list_screen.dart  - List of all quotes
-    quote_detail_screen.dart - Detailed view of a single quote
+    splash_screen.dart
+    main_screen.dart
+    home_screen.dart
+    quotes_list_screen.dart
+    quote_detail_screen.dart
+    favorites_screen.dart
+  services/
+    quote_repository.dart
+    quote_service.dart
+    quote_storage_service.dart
 ```
 
-## Assumptions & Known Limitations
+## Notes
 
-- The app fetches a new random quote each time the home screen is opened
-- Quote detail screen receives data via navigation arguments rather than re-fetching from API
-- Pagination is set to 20 quotes per request (default first page)
-- Internet connection is required to load quotes
-- Loading and error states are handled with a spinner and retry button
+- The app now follows a simple repository → service → UI structure
+- Favorite quotes are persisted locally
+- Recent quote history is cached for quick access
+- The project is structured to support a small onboarding-style architecture walkthrough

@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import '../widgets/quote_icon.dart';
-import 'main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,21 +27,20 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.linear),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.92,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
-    _fontSizeAnimation = Tween<double>(begin: 28, end: 36).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.linear),
-    );
+    _fontSizeAnimation = Tween<double>(
+      begin: 28,
+      end: 36,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
     _controller.forward();
 
     Timer(const Duration(seconds: 7), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-      );
+      context.go('/main');
     });
   }
 
