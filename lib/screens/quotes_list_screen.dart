@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../models/quote.dart';
-import '../services/quote_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../blocs/quote_list_bloc.dart';
+import '../repositories/quote_repository.dart';
+import '../widgets/quote_card.dart';
 import '../widgets/shimmer_loading.dart';
-import 'quote_detail_screen.dart';
 
 class QuotesListScreen extends StatefulWidget {
   const QuotesListScreen({super.key});
@@ -12,132 +14,107 @@ class QuotesListScreen extends StatefulWidget {
 }
 
 class _QuotesListScreenState extends State<QuotesListScreen> {
-  final QuoteService _quoteService = QuoteService();
-  List<Quote> _quotes = [];
-  bool _isLoading = true;
-  String? _error;
+  late final QuoteListBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-    _fetchQuotes();
+    _bloc = QuoteListBloc(repository: context.read<QuoteRepository>());
+    _bloc.add(LoadQuotesEvent());
   }
 
-  Future<void> _fetchQuotes() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final quotes = await _quoteService.getQuotes();
-      setState(() {
-        _quotes = quotes;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = 'Failed to load quotes. Please try again.';
-        _isLoading = false;
-      });
-    }
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
-            child: Text(
-              'Quotes',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Expanded(
-            child: _buildContent(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    if (_isLoading) {
-      return const QuotesListShimmer();
-    }
-
-    if (_error != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _error!,
-              style: const TextStyle(fontSize: 16, color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _fetchQuotes,
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: _quotes.length,
-      itemBuilder: (context, index) {
-        return _buildQuoteCard(_quotes[index]);
-      },
-    );
-  }
-
-  Widget _buildQuoteCard(Quote quote) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuoteDetailScreen(quote: quote),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5F5F5),
-          borderRadius: BorderRadius.circular(12),
-        ),
+    return BlocProvider<QuoteListBloc>.value(
+      value: _bloc,
+      child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              quote.quote,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.black87,
-                height: 1.4,
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
+              child: Text(
+                'Quotes',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 8),
-            Text(
-              '- ${quote.author}',
-              style: const TextStyle(
-                fontSize: 13,
-                color: Colors.black45,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search quotes',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                ),
+                onChanged: (value) {
+                  context.read<QuoteListBloc>().add(SearchQuotesEvent(value));
+                },
+              ),
+            ),
+            Expanded(
+              child: BlocBuilder<QuoteListBloc, QuoteListState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const QuotesListShimmer();
+                  }
+
+                  if (state.error != null && state.quotes.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            state.error!,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => context.read<QuoteListBloc>().add(
+                              LoadQuotesEvent(),
+                            ),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<QuoteListBloc>().add(RefreshQuotesEvent());
+                    },
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: state.visibleQuotes.length,
+                      itemBuilder: (context, index) {
+                        final quote = state.visibleQuotes[index];
+                        return QuoteCard(
+                          quote: quote,
+                          onTap: () {
+                            context.push('/quote/${quote.id}', extra: quote);
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ),
           ],

@@ -1,57 +1,80 @@
 # Quotes App
 
-A Flutter application that displays inspirational quotes using the DummyJSON Quotes API.
+A Flutter application that displays inspirational quotes using the DummyJSON Quotes API. The project now also reflects a more structured onboarding-style architecture with state management, dependency injection, routing, and local storage support.
 
 ## How to Run
 
-1. Make sure you have Flutter installed (version 3.41.6 or later)
+1. Make sure you have Flutter installed
 2. Clone the repository
-3. Run `flutter pub get` to install dependencies
+3. Run `flutter pub get`
 4. Run `flutter run` to launch the app on your connected device or emulator
 
 ## Flutter Version & Packages
 
-- **Flutter**: 3.41.6 (stable channel)
-- **Dart**: 3.11.4
-- **Packages used**:
-  - `http: ^1.2.1` - For making API requests to the DummyJSON API
-  - `cupertino_icons: ^1.0.8` - Default icon pack
+- **Flutter**: 3.44.4
+- **Dart**: 3.12.2
+- **Main packages**:
+  - `flutter_bloc` - State management with Cubit
+  - `go_router` - Navigation and route handling
+  - `shared_preferences` - Simple local storage for cached data and favorites
+  - `http` - API requests
+  - `cupertino_icons` - Default icon pack
 
 ## Features
 
-- **Splash Screen**: Shows the app icon and title before navigating to the home screen
-- **Home Screen (Quote of the Day)**: Displays a random quote fetched from the API
-- **Quotes List Screen**: Shows a scrollable list of quotes in card format
-- **Quote Detail Screen**: Full view of a selected quote with back navigation
+- **Splash Screen**: Animated entry experience before the app opens
+- **Home Screen**: Displays a random quote with loading, retry, cached fallback, and typed error messaging
+- **Quotes List Screen**: Shows quote cards with refresh support, loading and error handling, and navigation to detail view
+- **Quote Detail Screen**: Displays a quote in full view and supports favorite storage
+- **Offline-friendly behavior**: Cached quote data can be shown if the network request fails
+- **Week 2/3 onboarding feature**: Added a reactive state flow using Cubit and BLoC patterns, with explicit failure types for timeouts, server issues, and network problems
+
+## App Architecture
+
+The app now follows a cleaner structure with separate responsibilities:
+
+- **Repository layer** for quote data access
+- **Cubit layer** for reactive UI state and failure handling
+- **Storage service** for cached quotes and favorites
+- **Router setup** for screen navigation
+- **Typed failure model** for clearer UI feedback and more resilient onboarding-style testing
 
 ## API
 
 All data is fetched from [DummyJSON Quotes API](https://dummyjson.com/docs/quotes):
 
-- `GET /quotes/random` - Random quote for home screen
-- `GET /quotes?limit=20&skip=0` - Paginated list of quotes
-- Quote detail is passed via navigation (no additional API call needed)
+- `GET /quotes/random` - Random quote for the home screen
+- `GET /quotes?limit=30&skip=0` - List of quotes
+- `GET /quotes/{id}` - Quote detail fetch
 
 ## Project Structure
 
-```
+```text
 lib/
-  main.dart                  - App entry point and theme configuration
-  models/
-    quote.dart               - Quote data model
-  services/
-    quote_service.dart       - API service for fetching quotes
-  screens/
-    splash_screen.dart       - Splash/loading screen
-    home_screen.dart         - Quote of the Day screen
-    quotes_list_screen.dart  - List of all quotes
-    quote_detail_screen.dart - Detailed view of a single quote
+  main.dart                    - App entry point and provider setup
+  router.dart                  - App routing configuration
+  cubits/                      - Cubit state management for quotes
+  repositories/                - Repository abstraction and implementation
+  services/                    - Storage and other app services
+  screens/                     - Splash, home, list, and detail screens
+  models/                      - Quote data model
+  widgets/                     - Reusable UI components
 ```
 
-## Assumptions & Known Limitations
+## Roadmap Status
 
-- The app fetches a new random quote each time the home screen is opened
-- Quote detail screen receives data via navigation arguments rather than re-fetching from API
-- Pagination is set to 20 quotes per request (default first page)
-- Internet connection is required to load quotes
-- Loading and error states are handled with a spinner and retry button
+The onboarding roadmap is now considered fully complete for the current app scope:
+
+- Clean architecture split between screens, state, repositories, services, and models
+- Dependency injection via repository providers and storage injection
+- Reactive state management with Cubit and BLoC
+- Route-based navigation with a splash flow and deep-link support
+- Persistent favorite storage and favorites-list navigation
+- Searchable quote list and resilient offline fallback behavior
+- Automated tests and analyzer-based validation
+
+## Notes
+
+- The app is designed to be more maintainable and easier to extend for onboarding-style learning
+- Some features now use cached data when the network is unavailable
+- The current setup is focused on learning, architecture clarity, clean UI state flow, and stronger test coverage
