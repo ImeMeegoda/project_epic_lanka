@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'app/router.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
-  // App starts here and hands off to the typed router flow.
   runApp(const QuotesApp());
 }
 
@@ -12,9 +10,7 @@ class QuotesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final router = AppRouter().buildRouter();
-
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Quotes',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -22,7 +18,7 @@ class QuotesApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      routerConfig: router,
+      home: const SplashScreen(),
     );
   }
 }
