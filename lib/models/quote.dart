@@ -1,9 +1,7 @@
-class Quote {
-  final int id;
-  final String quote;
-  final String author;
+import '../features/quotes/domain/entities/quote_entity.dart';
 
-  const Quote({required this.id, required this.quote, required this.author});
+class Quote extends QuoteEntity {
+  const Quote({required super.id, required super.quote, required super.author});
 
   factory Quote.fromJson(Map<String, dynamic> json) {
     return Quote(
@@ -11,6 +9,10 @@ class Quote {
       quote: json['quote'] as String,
       author: json['author'] as String,
     );
+  }
+
+  factory Quote.fromEntity(QuoteEntity entity) {
+    return Quote(id: entity.id, quote: entity.quote, author: entity.author);
   }
 
   Map<String, dynamic> toJson() {

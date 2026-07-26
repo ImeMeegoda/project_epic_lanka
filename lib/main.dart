@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubits/random_quote_cubit.dart';
-import 'repositories/quote_repository.dart';
-import 'repositories/quote_repository_impl.dart';
+import 'features/quotes/data/datasources/quote_local_data_source.dart';
+import 'features/quotes/data/datasources/quote_remote_data_source.dart';
+import 'features/quotes/data/repositories/quote_repository_impl.dart';
+import 'features/quotes/domain/repositories/quote_repository.dart';
 import 'router.dart';
 import 'services/quote_storage_service.dart';
 
@@ -15,7 +17,10 @@ class QuotesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuoteRepository repository = QuoteRepositoryImpl();
+    final QuoteRepository repository = QuoteRepositoryImpl(
+      remoteDataSource: QuoteRemoteDataSourceImpl(),
+      localDataSource: QuoteLocalDataSourceImpl(),
+    );
     final QuoteStorageService storageService = QuoteStorageService();
 
     return MultiRepositoryProvider(
