@@ -15,6 +15,7 @@ class QuoteModel extends QuoteEntity {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {'id': id, 'quote': quote, 'author': author};
   }

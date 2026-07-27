@@ -15,6 +15,7 @@ class Quote extends QuoteEntity {
     return Quote(id: entity.id, quote: entity.quote, author: entity.author);
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {'id': id, 'quote': quote, 'author': author};
   }
