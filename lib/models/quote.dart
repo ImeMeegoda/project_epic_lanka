@@ -1,19 +1,22 @@
-class Quote {
-  final int id;
-  final String quote;
-  final String author;
+import '../features/quotes/domain/entities/quote_entity.dart';
 
-  Quote({
-    required this.id,
-    required this.quote,
-    required this.author,
-  });
+class Quote extends QuoteEntity {
+  const Quote({required super.id, required super.quote, required super.author});
 
   factory Quote.fromJson(Map<String, dynamic> json) {
     return Quote(
-      id: json['id'],
-      quote: json['quote'],
-      author: json['author'],
+      id: json['id'] as int,
+      quote: json['quote'] as String,
+      author: json['author'] as String,
     );
+  }
+
+  factory Quote.fromEntity(QuoteEntity entity) {
+    return Quote(id: entity.id, quote: entity.quote, author: entity.author);
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'quote': quote, 'author': author};
   }
 }
