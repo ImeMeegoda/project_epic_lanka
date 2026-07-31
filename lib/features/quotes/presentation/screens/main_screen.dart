@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../services/quote_storage_service.dart';
+import '../../domain/repositories/quote_repository.dart';
 import '../widgets/quote_icon.dart';
 import 'favorites_screen.dart';
 import 'home_screen.dart';
@@ -17,6 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   int _favoriteCount = 0;
 
+  //  Bottom navigation eke denna screens 3 list ekak widiyata thiyagannawa.
   final List<Widget> _screens = const [
     HomeScreen(),
     QuotesListScreen(),
@@ -35,8 +36,9 @@ class _MainScreenState extends State<MainScreen> {
     _refreshFavoriteCount();
   }
 
+  // Favorites count eka repository eken arala badge ekata denawa.
   Future<void> _refreshFavoriteCount() async {
-    final count = await context.read<QuoteStorageService>().getFavoriteCount();
+    final count = await context.read<QuoteRepository>().getFavoriteCount();
     if (!mounted) {
       return;
     }

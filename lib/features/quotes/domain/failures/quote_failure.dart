@@ -1,5 +1,6 @@
 enum QuoteFailureKind { timeout, server, network, unknown }
 
+// App eka athule wena exceptions handle karanna use karana custom failure types.
 class QuoteFailure implements Exception {
   const QuoteFailure(this.kind, [this.message = '']);
 

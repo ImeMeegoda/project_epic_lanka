@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../models/quote.dart';
+import '../../domain/entities/quote_entity.dart';
 
 class QuoteCard extends StatelessWidget {
+  // Quote ekak lassana card ekak widiyata display karanna use karana reusable widget eka.
   const QuoteCard({super.key, required this.quote, required this.onTap});
 
-  final Quote quote;
+  final QuoteEntity quote;
   final VoidCallback onTap;
 
   @override

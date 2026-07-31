@@ -8,6 +8,7 @@ abstract class QuoteRemoteDataSource {
   Future<List<QuoteModel>> getQuotes({int limit = 30, int skip = 0});
 }
 
+// Internet eka haraha remote API eka ekka katha karana data source eka.
 class QuoteRemoteDataSourceImpl implements QuoteRemoteDataSource {
   QuoteRemoteDataSourceImpl({http.Client? client})
     : _client = client ?? http.Client();

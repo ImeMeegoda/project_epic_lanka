@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class QuoteIcon extends StatelessWidget {
+  // SVG quote icon eka display karanna use karana helper widget eka.
   final Color color;
   final double size;
 

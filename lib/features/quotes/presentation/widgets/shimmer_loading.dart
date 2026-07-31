@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeShimmer extends StatelessWidget {
+  // Data load wena welawata Home screen eke pennana skeleton loading animation eka.
   const HomeShimmer({super.key});
 
   @override
@@ -67,6 +68,7 @@ class HomeShimmer extends StatelessWidget {
 }
 
 class QuotesListShimmer extends StatelessWidget {
+  // Quotes list eka load weddi pennana skeleton loading animation eka.
   const QuotesListShimmer({super.key});
 
   @override
