@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/quote.dart';
-import '../repositories/quote_repository.dart';
+import '../../domain/entities/quote_entity.dart';
+import '../../domain/repositories/quote_repository.dart';
 
 abstract class QuoteListEvent {}
 
@@ -16,7 +16,7 @@ class SearchQuotesEvent extends QuoteListEvent {
 
 class QuoteListState {
   const QuoteListState({
-    this.quotes = const <Quote>[],
+    this.quotes = const <QuoteEntity>[],
     this.isLoading = false,
     this.isRefreshing = false,
     this.error,
@@ -24,15 +24,16 @@ class QuoteListState {
     this.searchQuery = '',
   });
 
-  final List<Quote> quotes;
+  final List<QuoteEntity> quotes;
   final bool isLoading;
   final bool isRefreshing;
   final String? error;
   final bool hasLoaded;
   final String searchQuery;
 
+  // Immutable state ekak update karanne mehemai. Parana data thiyagena ona tika wetharak wenas karanawa.
   QuoteListState copyWith({
-    List<Quote>? quotes,
+    List<QuoteEntity>? quotes,
     bool? isLoading,
     bool? isRefreshing,
     String? error,
@@ -52,7 +53,8 @@ class QuoteListState {
   bool get isEmpty =>
       !isLoading && !isRefreshing && quotes.isEmpty && error == null;
 
-  List<Quote> get visibleQuotes {
+  // API ekata ayeth yanne nethuwa memory eke thiyena list eka filter karala instant results UI ekata dena logic eka.
+  List<QuoteEntity> get visibleQuotes {
     final normalizedQuery = searchQuery.trim().toLowerCase();
     if (normalizedQuery.isEmpty) {
       return quotes;
@@ -82,7 +84,6 @@ class QuoteListBloc extends Bloc<QuoteListEvent, QuoteListState> {
     emit(state.copyWith(isLoading: true, error: null, hasLoaded: false));
 
     try {
-      // The screen stays simple and just reacts to the state that comes back.
       final quotes = await _repository.getQuotes();
       emit(
         state.copyWith(

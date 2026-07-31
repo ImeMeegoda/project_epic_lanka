@@ -1,5 +1,6 @@
 import '../../domain/entities/quote_entity.dart';
 
+// API data tika Flutter objects widiyata handle karanna use karana model eka.
 class QuoteModel extends QuoteEntity {
   const QuoteModel({
     required super.id,
@@ -12,6 +13,14 @@ class QuoteModel extends QuoteEntity {
       id: json['id'] as int,
       quote: json['quote'] as String,
       author: json['author'] as String,
+    );
+  }
+
+  factory QuoteModel.fromEntity(QuoteEntity entity) {
+    return QuoteModel(
+      id: entity.id,
+      quote: entity.quote,
+      author: entity.author,
     );
   }
 

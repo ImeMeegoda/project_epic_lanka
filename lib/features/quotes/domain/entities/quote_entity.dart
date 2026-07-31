@@ -1,3 +1,4 @@
+// App eke business logic wala use karana main data entity eka.
 class QuoteEntity {
   const QuoteEntity({
     required this.id,

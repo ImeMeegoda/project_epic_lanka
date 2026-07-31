@@ -12,6 +12,7 @@ abstract class QuoteLocalDataSource {
   Future<void> clearAll();
 }
 
+// Local storage eka ekka katha karana logic eka thiyena data source eka.
 class QuoteLocalDataSourceImpl implements QuoteLocalDataSource {
   static const String _cachedQuoteKey = 'cached_quote';
   static const String _favoriteQuotesKey = 'favorite_quotes';

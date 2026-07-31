@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../models/quote.dart';
-import '../repositories/quote_repository.dart';
-import '../services/quote_storage_service.dart';
+import '../../domain/entities/quote_entity.dart';
+import '../../domain/repositories/quote_repository.dart';
 
 class QuoteDetailScreen extends StatefulWidget {
   const QuoteDetailScreen({super.key, required this.quote, this.fallbackId});
 
-  final Quote quote;
+  final QuoteEntity quote;
   final int? fallbackId;
 
   @override
@@ -16,7 +15,7 @@ class QuoteDetailScreen extends StatefulWidget {
 }
 
 class _QuoteDetailScreenState extends State<QuoteDetailScreen> {
-  late Quote _quote;
+  late QuoteEntity _quote;
   bool _isFavorite = false;
 
   @override
@@ -29,10 +28,10 @@ class _QuoteDetailScreenState extends State<QuoteDetailScreen> {
     }
   }
 
+  // Quote eka favorite da nethda kiyana eka check karanawa.
   Future<void> _loadFavoriteState() async {
-    final favorites = await context
-        .read<QuoteStorageService>()
-        .getFavoriteQuotes();
+    final repository = context.read<QuoteRepository>();
+    final favorites = await repository.getFavoriteQuotes();
     if (!mounted) {
       return;
     }
@@ -41,16 +40,17 @@ class _QuoteDetailScreenState extends State<QuoteDetailScreen> {
     });
   }
 
+  // Favorite status eka repository eka ekka sync karala UI eka update karana logic eka.
   Future<void> _toggleFavorite() async {
-    final storage = context.read<QuoteStorageService>();
+    final repository = context.read<QuoteRepository>();
     if (_isFavorite) {
-      await storage.removeFavoriteQuote(_quote);
+      await repository.removeFavoriteQuote(_quote);
       setState(() {
         _isFavorite = false;
       });
       return;
     }
-    await storage.saveFavoriteQuote(_quote);
+    await repository.saveFavoriteQuote(_quote);
     setState(() {
       _isFavorite = true;
     });

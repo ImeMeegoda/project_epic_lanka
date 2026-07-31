@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../domain/repositories/quote_repository.dart';
 import '../blocs/quote_list_bloc.dart';
-import '../repositories/quote_repository.dart';
 import '../widgets/quote_card.dart';
 import '../widgets/shimmer_loading.dart';
 
@@ -19,6 +19,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   @override
   void initState() {
     super.initState();
+    // Me screen ekata witharak adala BLoC eka initialize karala data load karana event eka trigger karanawa.
     _bloc = QuoteListBloc(repository: context.read<QuoteRepository>());
     _bloc.add(LoadQuotesEvent());
   }
@@ -52,15 +53,15 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search quotes',
+                  hintText: 'Search quotes...',
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 ),
                 onChanged: (value) {
-                  context.read<QuoteListBloc>().add(SearchQuotesEvent(value));
+                  // User type karana query eka real-time BLoC ekata yawanawa instant search filtering karanna.
+                  _bloc.add(SearchQuotesEvent(value));
                 },
               ),
             ),
@@ -86,7 +87,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton(
-                            onPressed: () => context.read<QuoteListBloc>().add(
+                            onPressed: () => _bloc.add(
                               LoadQuotesEvent(),
                             ),
                             child: const Text('Retry'),
@@ -96,9 +97,10 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                     );
                   }
 
+                  // List eka aluth karanna pahalata pull karama Refresh event eka trigger wenawa.
                   return RefreshIndicator(
                     onRefresh: () async {
-                      context.read<QuoteListBloc>().add(RefreshQuotesEvent());
+                      _bloc.add(RefreshQuotesEvent());
                     },
                     child: ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

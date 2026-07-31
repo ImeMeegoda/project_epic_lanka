@@ -1,24 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/quote.dart';
-import '../repositories/quote_repository.dart';
+import '../../domain/entities/quote_entity.dart';
+import '../../domain/repositories/quote_repository.dart';
 
 class QuoteListState {
   const QuoteListState({
-    this.quotes = const <Quote>[],
+    this.quotes = const <QuoteEntity>[],
     this.isLoading = false,
     this.isRefreshing = false,
     this.error,
     this.hasLoaded = false,
   });
 
-  final List<Quote> quotes;
+  final List<QuoteEntity> quotes;
   final bool isLoading;
   final bool isRefreshing;
   final String? error;
   final bool hasLoaded;
 
   QuoteListState copyWith({
-    List<Quote>? quotes,
+    List<QuoteEntity>? quotes,
     bool? isLoading,
     bool? isRefreshing,
     String? error,
@@ -37,6 +37,7 @@ class QuoteListState {
       !isLoading && !isRefreshing && quotes.isEmpty && error == null;
 }
 
+// Quotes list eke state eka handle karana Cubit eka (simple scenario walata).
 class QuoteListCubit extends Cubit<QuoteListState> {
   QuoteListCubit({required QuoteRepository repository})
     : _repository = repository,

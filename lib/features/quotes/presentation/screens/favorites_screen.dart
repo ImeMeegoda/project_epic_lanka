@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/quote.dart';
-import '../services/quote_storage_service.dart';
+import '../../domain/entities/quote_entity.dart';
+import '../../domain/repositories/quote_repository.dart';
 import 'quote_detail_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -12,18 +12,18 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  late Future<List<Quote>> _favoritesFuture;
+  late Future<List<QuoteEntity>> _favoritesFuture;
 
   @override
   void initState() {
     super.initState();
-    _favoritesFuture = context.read<QuoteStorageService>().getFavoriteQuotes();
+    _favoritesFuture = context.read<QuoteRepository>().getFavoriteQuotes();
   }
 
   Future<void> _refreshFavorites() async {
     setState(() {
       _favoritesFuture = context
-          .read<QuoteStorageService>()
+          .read<QuoteRepository>()
           .getFavoriteQuotes();
     });
   }
@@ -36,7 +36,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-      body: FutureBuilder<List<Quote>>(
+      // Repository eken save karapu favorites tika asynchronous widiyata ganna FutureBuilder use karanawa.
+      body: FutureBuilder<List<QuoteEntity>>(
         future: _favoritesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

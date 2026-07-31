@@ -20,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
+    // App eka start weddima ena animation tika configure karanawa.
     _controller = AnimationController(
       duration: const Duration(milliseconds: 6500),
       vsync: this,
@@ -37,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
+    // Seconds 7 kata passe automatic main home screen ekata navigate wenawa.
     Timer(const Duration(seconds: 7), () {
       if (!mounted) {
         return;
