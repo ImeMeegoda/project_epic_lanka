@@ -18,8 +18,10 @@ class QuoteRemoteDataSourceImpl implements QuoteRemoteDataSource {
 
   @override
   Future<QuoteModel> getRandomQuote() async {
+    // API ekata request eka yawala response eka check karanawa.
     final response = await _client.get(Uri.parse('$_baseUrl/random'));
     if (response.statusCode == 200) {
+      // JSON data tika QuoteModel ekakata convert (decode) karanawa.
       return QuoteModel.fromJson(
         json.decode(response.body) as Map<String, dynamic>,
       );
@@ -40,12 +42,14 @@ class QuoteRemoteDataSourceImpl implements QuoteRemoteDataSource {
 
   @override
   Future<List<QuoteModel>> getQuotes({int limit = 30, int skip = 0}) async {
+    // Pagination (limit/skip) parameters ekka list eka fetch karanawa.
     final response = await _client.get(
       Uri.parse('$_baseUrl?limit=$limit&skip=$skip'),
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
       final quotesJson = data['quotes'] as List<dynamic>;
+      // Map logic eka use karala JSON list eka Models list ekak karanawa.
       return quotesJson
           .map((quote) => QuoteModel.fromJson(quote as Map<String, dynamic>))
           .toList();

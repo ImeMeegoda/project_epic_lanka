@@ -5,6 +5,7 @@ import '../datasources/quote_remote_data_source.dart';
 import '../models/quote_model.dart';
 
 // Data sources (Remote/Local) saha Domain layer eka connect karana repository implementation eka.
+// Meka thami තීරණ ගන්නේ දත්ත ගන්නේ කොහෙන්ද (API vs Cache) කියලා.
 class QuoteRepositoryImpl implements QuoteRepository {
   QuoteRepositoryImpl({
     required QuoteRemoteDataSource remoteDataSource,
@@ -17,8 +18,11 @@ class QuoteRepositoryImpl implements QuoteRepository {
 
   @override
   Future<QuoteEntity> getRandomQuote() async {
+    // Mulinma API call karala random quote ekak gannawa.
     final remoteQuote = await _remoteDataSource.getRandomQuote();
+    // Gaththu quote eka offline use karanna cache karanawa.
     await _localDataSource.cacheQuote(remoteQuote);
+    // QuoteModel (Data) eka QuoteEntity (Domain) ekakata convert karala UI ekata dhenawa.
     return remoteQuote.toEntity();
   }
 
@@ -34,11 +38,13 @@ class QuoteRepositoryImpl implements QuoteRepository {
       limit: limit,
       skip: skip,
     );
+    // List ekak mapping haraha Entities bawata harawanawa.
     return remoteQuotes.map((quote) => quote.toEntity()).toList();
   }
 
   @override
   Future<void> saveFavoriteQuote(QuoteEntity quote) async {
+    // Domain entity eka model ekakata harawala local storage save karanawa.
     await _localDataSource.saveFavoriteQuote(QuoteModel.fromEntity(quote));
   }
 

@@ -18,7 +18,7 @@ class QuoteModel extends QuoteEntity {
 
   factory QuoteModel.fromEntity(QuoteEntity entity) {
     return QuoteModel(
-      id: entity.id,
+      id: entity.id ,
       quote: entity.quote,
       author: entity.author,
     );

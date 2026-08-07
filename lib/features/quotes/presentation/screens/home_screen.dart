@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // [SPECIAL PART] - Screen eka load weddima random quote ekak fetch karanna kiyala Cubit ekata kiyanawa.
+    // Screen eka load weddima random quote ekak fetch karanna kiyala Cubit ekata kiyanawa.
     context.read<RandomQuoteCubit>().loadRandomQuote();
   }
 

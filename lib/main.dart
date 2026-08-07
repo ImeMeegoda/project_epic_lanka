@@ -16,17 +16,22 @@ class QuotesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Week 1: Explicit Dependency Injection
-    // Creating data sources
+    //  Explicit Dependency Injection
+    // App eka start weddima ona karana data sources tika initialize karanawa.
+    // Remote eken internet data gannawa, Local eken phone eke save karana data gannawa.
     final remoteDataSource = QuoteRemoteDataSourceImpl();
     final localDataSource = QuoteLocalDataSourceImpl();
 
     // Creating the repository with injected data sources
+    // Data sources dhekama repository ekata inject karanawa (Dependency Injection).
+    // Meka nisa repository ekata thheeranaya karanna puluwan data ganna ona API ekendha nethnam Cache ekendha kiyala.
     final QuoteRepository repository = QuoteRepositoryImpl(
       remoteDataSource: remoteDataSource,
       localDataSource: localDataSource,
     );
 
+    // MultiRepositoryProvider eken repository object eka app eka purama share karanawa.
+    // BlocProvider eken logic handle karana Cubit/Bloc tika root level ekema set karanawa.
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<QuoteRepository>.value(value: repository),
@@ -45,7 +50,7 @@ class QuotesApp extends StatelessWidget {
             useMaterial3: true,
             scaffoldBackgroundColor: Colors.white,
           ),
-          routerConfig: AppRouter.router,
+          routerConfig: AppRouter.router, // Navigation system eka router.dart eken gannawa.
         ),
       ),
     );
