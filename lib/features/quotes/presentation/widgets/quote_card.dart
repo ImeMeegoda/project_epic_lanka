@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/quote_entity.dart';
 
+// QuoteCard kiyanne "Reusable Widget" ekak.
+// List eke okkoma quotes pennanna use karanne me widget ekama thamai.
+// Meka nisa code eka "DRY" (Don't Repeat Yourself) widiyata thiyan ganna puluwan.
 class QuoteCard extends StatelessWidget {
-  // Quote ekak lassana card ekak widiyata display karanna use karana reusable widget eka.
   const QuoteCard({super.key, required this.quote, required this.onTap});
 
   final QuoteEntity quote;
@@ -22,6 +24,7 @@ class QuoteCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Quote text eka. Max lines 4k dala thiyenawa card eka loku wadi wenne nathi wenna.
             Text(
               quote.quote,
               style: const TextStyle(
@@ -33,6 +36,7 @@ class QuoteCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8),
+            // Author name eka pahasuwen dakinna puluwan widiyata damma.
             Text(
               '- ${quote.author}',
               style: const TextStyle(fontSize: 13, color: Colors.black45),

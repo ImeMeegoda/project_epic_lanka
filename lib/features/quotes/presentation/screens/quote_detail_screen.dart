@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/usecases/use_case.dart';
+import '../../../../injection_container.dart';
 import '../../domain/entities/quote_entity.dart';
-import '../../domain/repositories/quote_repository.dart';
 
 class QuoteDetailScreen extends StatefulWidget {
   const QuoteDetailScreen({super.key, required this.quote, this.fallbackId});
@@ -28,10 +28,9 @@ class _QuoteDetailScreenState extends State<QuoteDetailScreen> {
     }
   }
 
-  // Quote eka favorite da nethda kiyana eka check karanawa.
+  // Quote eka favorite da nethda kiyana eka UseCase eka haraha check karanawa.
   Future<void> _loadFavoriteState() async {
-    final repository = context.read<QuoteRepository>();
-    final favorites = await repository.getFavoriteQuotes();
+    final favorites = await DependencyInjection.getFavoriteQuotes(const NoParams());
     if (!mounted) {
       return;
     }
@@ -40,17 +39,16 @@ class _QuoteDetailScreenState extends State<QuoteDetailScreen> {
     });
   }
 
-  // Favorite status eka repository eka ekka sync karala UI eka update karana logic eka.
+  // Favorite status eka UseCases haraha sync karala UI eka update karana logic eka.
   Future<void> _toggleFavorite() async {
-    final repository = context.read<QuoteRepository>();
     if (_isFavorite) {
-      await repository.removeFavoriteQuote(_quote);
+      await DependencyInjection.removeFavoriteQuote(_quote);
       setState(() {
         _isFavorite = false;
       });
       return;
     }
-    await repository.saveFavoriteQuote(_quote);
+    await DependencyInjection.saveFavoriteQuote(_quote);
     setState(() {
       _isFavorite = true;
     });
@@ -58,8 +56,7 @@ class _QuoteDetailScreenState extends State<QuoteDetailScreen> {
 
   Future<void> _loadQuoteById() async {
     try {
-      final repository = context.read<QuoteRepository>();
-      final refreshedQuote = await repository.getQuoteById(_quote.id);
+      final refreshedQuote = await DependencyInjection.getQuoteById(_quote.id);
       if (!mounted) {
         return;
       }

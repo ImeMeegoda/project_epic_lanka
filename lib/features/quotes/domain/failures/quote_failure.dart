@@ -1,12 +1,14 @@
+// App eke wenna puluwan errors lassanata warga karanna me enum eka use karanawa.
 enum QuoteFailureKind { timeout, server, network, unknown }
 
-// App eka athule wena exceptions handle karanna use karana custom failure types.
+// Custom Failure class eka. Meken raw error codes UI ekata therena messages bawata harawanawa.
 class QuoteFailure implements Exception {
   const QuoteFailure(this.kind, [this.message = '']);
 
   final QuoteFailureKind kind;
   final String message;
 
+  // HTTP status codes anuwa ena error eka mokakdha kiyala theeranaya karana factory method eka.
   factory QuoteFailure.fromStatusCode(int statusCode) {
     if (statusCode == 408) {
       return const QuoteFailure(

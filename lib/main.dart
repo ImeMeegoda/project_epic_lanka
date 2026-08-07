@@ -30,7 +30,7 @@ class QuotesApp extends StatelessWidget {
       ],
       child: BlocProvider<RandomQuoteCubit>(
         create: (context) => RandomQuoteCubit(
-          repository: context.read<QuoteRepository>(),
+          getRandomQuote: DependencyInjection.getRandomQuote,
         ),
         child: MaterialApp.router(
           title: 'Quotes',

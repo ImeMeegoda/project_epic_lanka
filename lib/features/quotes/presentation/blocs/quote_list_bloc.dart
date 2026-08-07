@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/quote_entity.dart';
-import '../../domain/repositories/quote_repository.dart';
+import '../../domain/usecases/get_quotes.dart';
 
 abstract class QuoteListEvent {}
 
@@ -69,8 +69,8 @@ class QuoteListState {
 }
 
 class QuoteListBloc extends Bloc<QuoteListEvent, QuoteListState> {
-  QuoteListBloc({required QuoteRepository repository})
-    : _repository = repository,
+  QuoteListBloc({required GetQuotes getQuotes})
+    : _getQuotes = getQuotes,
       super(const QuoteListState(isLoading: true)) {
     // Event listeners tika set karanawa.
     on<LoadQuotesEvent>(_onLoadQuotes);
@@ -78,7 +78,7 @@ class QuoteListBloc extends Bloc<QuoteListEvent, QuoteListState> {
     on<SearchQuotesEvent>(_onSearchQuotes);
   }
 
-  final QuoteRepository _repository;
+  final GetQuotes _getQuotes;
 
   Future<void> _onLoadQuotes(
     LoadQuotesEvent event,
@@ -88,8 +88,8 @@ class QuoteListBloc extends Bloc<QuoteListEvent, QuoteListState> {
     emit(state.copyWith(isLoading: true, error: null, hasLoaded: false));
 
     try {
-      // Repository eka haraha daththa illanawa.
-      final quotes = await _repository.getQuotes();
+      // UseCase eka haraha data illanawa.
+      final quotes = await _getQuotes(GetQuotesParams());
       // Data labunu gaman, shimmer ain karala list eka UI ekata yawanawa.
       emit(
         state.copyWith(
@@ -128,7 +128,7 @@ class QuoteListBloc extends Bloc<QuoteListEvent, QuoteListState> {
     emit(state.copyWith(isRefreshing: true, error: null));
 
     try {
-      final quotes = await _repository.getQuotes();
+      final quotes = await _getQuotes(GetQuotesParams());
       emit(
         state.copyWith(
           quotes: quotes,

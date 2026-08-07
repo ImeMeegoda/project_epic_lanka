@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/usecases/use_case.dart';
+import '../../../../injection_container.dart';
 import '../../domain/entities/quote_entity.dart';
-import '../../domain/repositories/quote_repository.dart';
 import 'quote_detail_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -17,14 +17,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   void initState() {
     super.initState();
-    _favoritesFuture = context.read<QuoteRepository>().getFavoriteQuotes();
+    _favoritesFuture = DependencyInjection.getFavoriteQuotes(const NoParams());
   }
 
   Future<void> _refreshFavorites() async {
     setState(() {
-      _favoritesFuture = context
-          .read<QuoteRepository>()
-          .getFavoriteQuotes();
+      _favoritesFuture = DependencyInjection.getFavoriteQuotes(const NoParams());
     });
   }
 

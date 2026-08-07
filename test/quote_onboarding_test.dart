@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:quotes_app/features/quotes/domain/entities/quote_entity.dart';
 import 'package:quotes_app/features/quotes/domain/repositories/quote_repository.dart';
 import 'package:quotes_app/features/quotes/domain/failures/quote_failure.dart';
+import 'package:quotes_app/features/quotes/domain/usecases/get_quotes.dart';
+import 'package:quotes_app/features/quotes/domain/usecases/get_random_quote.dart';
 import 'package:quotes_app/features/quotes/presentation/blocs/quote_list_bloc.dart';
 import 'package:quotes_app/features/quotes/presentation/blocs/random_quote_cubit.dart';
 
@@ -109,8 +111,9 @@ void main() {
 
   group('RandomQuoteCubit', () {
     test('loads a quote and clears the loading state', () async {
+      final repository = FakeQuoteRepository();
       final cubit = RandomQuoteCubit(
-        repository: FakeQuoteRepository(),
+        getRandomQuote: GetRandomQuote(repository),
       );
 
       await cubit.loadRandomQuote();
@@ -121,8 +124,9 @@ void main() {
     });
 
     test('surfaces typed failures from the repository', () async {
+      final repository = TypedFailureRepository();
       final cubit = RandomQuoteCubit(
-        repository: TypedFailureRepository(),
+        getRandomQuote: GetRandomQuote(repository),
       );
 
       await cubit.loadRandomQuote();
@@ -133,7 +137,10 @@ void main() {
 
   group('QuoteListBloc', () {
     test('filters quotes by the current search query', () async {
-      final bloc = QuoteListBloc(repository: FakeQuoteRepository());
+      final repository = FakeQuoteRepository();
+      final bloc = QuoteListBloc(
+        getQuotes: GetQuotes(repository),
+      );
 
       bloc.add(LoadQuotesEvent());
       await bloc.stream.firstWhere((state) => state.hasLoaded);

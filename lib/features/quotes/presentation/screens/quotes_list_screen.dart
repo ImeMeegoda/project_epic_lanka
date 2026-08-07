@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/repositories/quote_repository.dart';
+import '../../../../injection_container.dart';
 import '../blocs/quote_list_bloc.dart';
 import '../widgets/quote_card.dart';
 import '../widgets/shimmer_loading.dart';
@@ -20,7 +20,8 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   void initState() {
     super.initState();
     // Me screen ekata witharak adala BLoC eka initialize karala data load karana event eka trigger karanawa.
-    _bloc = QuoteListBloc(repository: context.read<QuoteRepository>());
+    // UseCase eka injection container eken gannawa.
+    _bloc = QuoteListBloc(getQuotes: DependencyInjection.getQuotes);
     _bloc.add(LoadQuotesEvent());
   }
 

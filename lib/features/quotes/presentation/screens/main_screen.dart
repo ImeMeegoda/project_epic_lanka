@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/repositories/quote_repository.dart';
+import '../../../../core/usecases/use_case.dart';
+import '../../../../injection_container.dart';
 import '../widgets/quote_icon.dart';
 import 'favorites_screen.dart';
 import 'home_screen.dart';
@@ -36,9 +36,9 @@ class _MainScreenState extends State<MainScreen> {
     _refreshFavoriteCount();
   }
 
-  // Favorites count eka repository eken arala badge ekata denawa.
+  // Favorites count eka UseCase eka haraha gannawa.
   Future<void> _refreshFavoriteCount() async {
-    final count = await context.read<QuoteRepository>().getFavoriteCount();
+    final count = await DependencyInjection.getFavoriteCount(const NoParams());
     if (!mounted) {
       return;
     }

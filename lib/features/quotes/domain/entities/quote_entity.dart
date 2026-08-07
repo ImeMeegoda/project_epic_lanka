@@ -1,4 +1,6 @@
-// App eke business logic wala use karana main data entity eka.
+// QuoteEntity kiyanne app eke thiyena "Purest" data object eka.
+// Meke thiyenne business logic walata ona pradhana daththa wetharayi (id, quote, author).
+// API details (Models) saha UI (Widgets) walin meka sampurnayenma wen wela thiyenne.
 class QuoteEntity {
   const QuoteEntity({
     required this.id,
@@ -10,6 +12,7 @@ class QuoteEntity {
   final String quote;
   final String author;
 
+  // JSON daththa Entity ekakata harawanna use karana factory constructor eka.
   factory QuoteEntity.fromJson(Map<String, dynamic> json) {
     return QuoteEntity(
       id: json['id'] as int,
@@ -18,6 +21,7 @@ class QuoteEntity {
     );
   }
 
+  // Entity ekak JSON (Map) ekakata harawana method eka (Local storage sēv karanna wage ona wenawa).
   Map<String, dynamic> toJson() {
     return {'id': id, 'quote': quote, 'author': author};
   }

@@ -36,13 +36,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             // [SPECIAL PART] - Cubit eke state eka anuwa UI eka change wenne me BlocBuilder eken.
+            // Meka nisa screen eka full rebuild wenne nathuwa adala kotasa wetharak auto-refresh wenawa.
             Expanded(
               child: BlocBuilder<RandomQuoteCubit, RandomQuoteState>(
                 builder: (context, state) {
+                  // State eka Loading nam Loading animation (Shimmer) pennanawa.
                   if (state.isLoading) {
                     return const HomeShimmer();
                   }
 
+                  // Error ekak thiyenawa nam Error message eka saha Retry button eka pennanawa.
                   if (state.error != null && state.quote == null) {
                     return Center(
                       child: Column(
