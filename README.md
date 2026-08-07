@@ -1,14 +1,14 @@
 # Quotes App - Clean Architecture Implementation
 
-A production-ready Flutter application that displays inspirational quotes using the DummyJSON Quotes API. This project is structured following the **Feature-first Clean Architecture** principles as part of the Technical Onboarding Plan.
+A production-ready Flutter application that displays inspirational quotes using the [DummyJSON Quotes API](https://dummyjson.com/docs/quotes). This project follows **Feature-first Clean Architecture** principles, ensuring scalability and high testability.
 
 ## Architecture Overview
 
-The project is organized into layers to ensure a separation of concerns, high testability, and maintainability:
+The project is organized into layers to ensure a separation of concerns:
 
-- **Presentation Layer**: Handles UI and State Management (Screens, Widgets, and Blocs/Cubits).
-- **Domain Layer**: Contains the business logic (Entities, Repository interfaces, and Use Cases/Failures). This layer is independent of any other layer.
-- **Data Layer**: Implements the repositories and handles data sources (Remote API via HTTP and Local Storage via SharedPreferences).
+- **Domain Layer**: The core of the application. Contains **Entities**, **Repository Interfaces**, and **Use Cases**. It is completely independent of other layers and contains the business logic.
+- **Data Layer**: Responsible for data retrieval and persistence. Contains **Models** (Data Transfer Objects), **Repository Implementations**, and **Data Sources** (Remote API via `http` and Local Storage via `shared_preferences`).
+- **Presentation Layer**: Handles the UI and State Management. Built with **Jetpack Compose-like declarative UI** in Flutter, using **BLoC/Cubit** for state management and **GoRouter** for navigation.
 
 ## Project Structure
 
@@ -17,21 +17,47 @@ lib/
 ├── features/
 │   └── quotes/
 │       ├── data/                  # Data layer: Models, Repositories (Impl), DataSources
-│       ├── domain/                # Domain layer: Entities, Repository (Interfaces), Failures
+│       ├── domain/                # Domain layer: Entities, Repository (Interfaces), Failures, UseCases
 │       └── presentation/          # Presentation layer: Screens, Widgets, Blocs/Cubits
-├── main.dart                      # App entry point & Explicit Dependency Injection
-└── router.dart                    # App routing configuration (go_router)
+├── injection_container.dart       # Explicit Dependency Injection (DI) Container
+├── main.dart                      # App entry point & DI Initialization
+├── router.dart                    # Centralized Routing (go_router)
+└── theme.dart                     # Material 3 Theme configuration
 ```
 
-## Onboarding Progress
+## Detailed Breakdown
 
-This repository reflects the completion of **Week 1: Architecture, Clean Code & DI** of the Technical Onboarding Plan:
+### 1. Domain Layer (Business Logic)
+Contains the following Use Cases that define what the app can do:
+- `GetQuotes`: Fetch a paginated list of quotes.
+- `GetRandomQuote`: Get a single random quote for the Home screen.
+- `GetQuoteById`: Retrieve details for a specific quote.
+- `SaveFavoriteQuote`: Add a quote to the local favorites list.
+- `RemoveFavoriteQuote`: Remove a quote from favorites.
+- `GetFavoriteQuotes`: Retrieve all locally stored favorites.
+- `GetFavoriteCount`: Get the total number of favorite quotes.
 
-- [x] **Feature Structure**: Consolidated all logic into the `quotes` feature folder.
-- [x] **Layer Responsibilities**: Strict separation between Presentation, Domain, and Data.
-- [x] **Explicit Dependency Injection**: DataSources and Repositories are initialized and injected at the root (`main.dart`).
-- [x] **SOLID Principles**: Used interface-based repositories to decouple the UI from data implementation.
-- [x] **Automated Testing**: Unit tests for Cubits, Blocs, and Repository logic with Mock/Fake providers.
+### 2. Presentation Layer (UI)
+The app consists of the following screens:
+- **Splash Screen**: Initial loading and branding.
+- **Main Screen**: Bottom navigation container.
+- **Home Screen**: Displays the "Quote of the Day".
+- **Quotes List**: Searchable list of all available quotes.
+- **Quote Detail**: Detailed view with favorite toggling.
+- **Favorites Screen**: List of saved quotes for quick access.
+
+### 3. Dependency Injection
+We use an **Explicit Dependency Injection** pattern via the `DependencyInjection` class in `lib/injection_container.dart`. This ensures that all components (DataSources -> Repositories -> UseCases) are properly wired at startup without relying on magic or complex DI frameworks.
+
+## Core Stack
+
+- **UI & Theme**: Flutter (Material 3)
+- **State Management**: `flutter_bloc` (Cubit)
+- **Navigation**: `go_router`
+- **Network**: `http`
+- **Local Storage**: `shared_preferences`
+- **UI Components**: `shimmer` (loading states), `flutter_svg` (vector icons)
+- **Testing**: `flutter_test` (Unit & Widget tests)
 
 ## Getting Started
 
@@ -45,16 +71,3 @@ This repository reflects the completion of **Week 1: Architecture, Clean Code & 
 3. Run `flutter analyze` to verify code quality.
 4. Run `flutter test` to execute the unit tests.
 5. Run `flutter run` to launch the app.
-
-## Features
-- **Quote of the Day**: Random quotes with offline caching support.
-- **Searchable List**: Instant filtering of quotes.
-- **Favorites**: Persist your favorite quotes locally.
-- **Resilient Networking**: Custom failure handling for timeouts and connectivity issues.
-
-## Core Stack
-- **State Management**: `flutter_bloc` (Cubit & BLoC)
-- **Navigation**: `go_router`
-- **Networking**: `http`
-- **Storage**: `shared_preferences`
-- **Testing**: `flutter_test`
