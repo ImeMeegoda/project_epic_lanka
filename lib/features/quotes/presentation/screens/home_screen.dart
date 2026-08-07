@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/random_quote_cubit.dart';
 import '../widgets/shimmer_loading.dart';
 
+// Random quote eka display karana pradhana screen eka.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // Screen eka launch una gaman data fetch karanna initState() eke logic eka liyala thiyenawa.
     // Screen eka load weddima random quote ekak fetch karanna kiyala Cubit ekata kiyanawa.
     context.read<RandomQuoteCubit>().loadRandomQuote();
   }
@@ -35,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            // [SPECIAL PART] - Cubit eke state eka anuwa UI eka change wenne me BlocBuilder eken.
+            //  Cubit eke state eka anuwa UI eka change wenne me BlocBuilder eken.
             // Meka nisa screen eka full rebuild wenne nathuwa adala kotasa wetharak auto-refresh wenawa.
             Expanded(
               child: BlocBuilder<RandomQuoteCubit, RandomQuoteState>(

@@ -8,8 +8,11 @@ class QuoteEntity {
     required this.author,
   });
 
+  // Quote ekata adala unique ID eka.
   final int id;
+  // Quote eke text eka.
   final String quote;
+  // Quote eka kiyapu kena (Author).
   final String author;
 
   // JSON daththa Entity ekakata harawanna use karana factory constructor eka.

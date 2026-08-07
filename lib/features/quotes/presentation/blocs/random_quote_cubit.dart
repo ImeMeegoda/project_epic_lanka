@@ -12,9 +12,13 @@ class RandomQuoteState {
     this.failure,
   });
 
+  // Load una random quote eka.
   final QuoteEntity? quote;
+  // Quote eka load wenawada kiyala balana indicator eka.
   final bool isLoading;
+  // Error message eka (UI eke pennanna).
   final String? error;
+  // Specific failure details (Debug karanna wage ona wenawa).
   final QuoteFailure? failure;
 }
 

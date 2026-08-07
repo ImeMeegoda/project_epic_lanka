@@ -6,6 +6,7 @@ import '../blocs/quote_list_bloc.dart';
 import '../widgets/quote_card.dart';
 import '../widgets/shimmer_loading.dart';
 
+// Okkoma quotes list eka pēnnana saha search karanna puluwan screen eka.
 class QuotesListScreen extends StatefulWidget {
   const QuotesListScreen({super.key});
 
@@ -14,6 +15,7 @@ class QuotesListScreen extends StatefulWidget {
 }
 
 class _QuotesListScreenState extends State<QuotesListScreen> {
+  // Me screen ekata adala BLoC eka methana manage karanawa.
   late final QuoteListBloc _bloc;
 
   @override
@@ -27,6 +29,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
 
   @override
   void dispose() {
+    // Memory leaks walin berenna screen eka close weddima BLoC ekath close karanna ona.
     _bloc.close();
     super.dispose();
   }
@@ -61,7 +64,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                   ),
                 ),
                 onChanged: (value) {
-                  // User type karana query eka real-time BLoC ekata yawanawa instant search filtering karanna.
+                  // User type karana query eka real time BLoC ekata yawanawa instant search filtering karanna.
                   _bloc.add(SearchQuotesEvent(value));
                 },
               ),

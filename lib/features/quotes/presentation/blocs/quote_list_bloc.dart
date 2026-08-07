@@ -2,18 +2,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/quote_entity.dart';
 import '../../domain/usecases/get_quotes.dart';
 
+// UI eken BLoC ekata yawana signals (Events).
 abstract class QuoteListEvent {}
 
+// Mulinma quotes list eka load karanna kiyana event eka.
 class LoadQuotesEvent extends QuoteListEvent {}
 
+// List eka refresh (ayeth load) karanna kiyana event eka.
 class RefreshQuotesEvent extends QuoteListEvent {}
 
+// List eka search (filter) karanna kiyana event eka.
 class SearchQuotesEvent extends QuoteListEvent {
   SearchQuotesEvent(this.query);
 
   final String query;
 }
 
+// BLoC eken UI ekata yawana current status eka (State).
 class QuoteListState {
   const QuoteListState({
     this.quotes = const <QuoteEntity>[],
@@ -24,11 +29,17 @@ class QuoteListState {
     this.searchQuery = '',
   });
 
+  // Current list of quotes.
   final List<QuoteEntity> quotes;
+  // First time load wenawada kiyala balanna.
   final bool isLoading;
+  // Refresh wenawada kiyala balanna.
   final bool isRefreshing;
+  // Error message ekak thiyenawa nam eka methana thiyenawa.
   final String? error;
+  // Data load wela iwaradha kiyala track karanawa.
   final bool hasLoaded;
+  // User type karana search query eka.
   final String searchQuery;
 
   // Immutable state ekak update karanne mehemai. 

@@ -5,7 +5,7 @@ import '../datasources/quote_remote_data_source.dart';
 import '../models/quote_model.dart';
 
 // Data sources (Remote/Local) saha Domain layer eka connect karana repository implementation eka.
-// Meka thami තීරණ ගන්නේ දත්ත ගන්නේ කොහෙන්ද (API vs Cache) කියලා.
+// Meka thami theerana ganne data ganne kohenda kiyla  (API vs Cache)
 class QuoteRepositoryImpl implements QuoteRepository {
   QuoteRepositoryImpl({
     required QuoteRemoteDataSource remoteDataSource,
@@ -28,17 +28,19 @@ class QuoteRepositoryImpl implements QuoteRepository {
 
   @override
   Future<QuoteEntity> getQuoteById(int id) async {
+    // ID eken specific quote ekak API eken fetch karanawa.
     final remoteQuote = await _remoteDataSource.getQuoteById(id);
     return remoteQuote.toEntity();
   }
 
   @override
   Future<List<QuoteEntity>> getQuotes({int limit = 30, int skip = 0}) async {
+    // API eken quotes list ekak fetch karanawa.
     final remoteQuotes = await _remoteDataSource.getQuotes(
       limit: limit,
       skip: skip,
     );
-    // List ekak mapping haraha Entities bawata harawanawa.
+    // List ekak mapping haraha Entities bawata harawanawa (UI ekata sudusu widiyata).
     return remoteQuotes.map((quote) => quote.toEntity()).toList();
   }
 

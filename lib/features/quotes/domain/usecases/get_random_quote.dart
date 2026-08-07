@@ -2,7 +2,7 @@ import '../../../../core/usecases/use_case.dart';
 import '../entities/quote_entity.dart';
 import '../repositories/quote_repository.dart';
 
-// Random quote ekak load karanna use karana use case eka.
+// API eken random quote ekak load karanna use karana use case eka.
 class GetRandomQuote implements UseCase<QuoteEntity, NoParams> {
   final QuoteRepository repository;
 
@@ -10,6 +10,7 @@ class GetRandomQuote implements UseCase<QuoteEntity, NoParams> {
 
   @override
   Future<QuoteEntity> call(NoParams params) async {
+    // Repository eka haraha random quote eka illanawa.
     return await repository.getRandomQuote();
   }
 }

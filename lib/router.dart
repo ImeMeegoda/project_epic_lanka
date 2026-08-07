@@ -8,7 +8,7 @@ import 'features/quotes/presentation/screens/splash_screen.dart';
 // App eke navigation system eka saha Deep Linking manage karanne me router eken.
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/', // App eka open weddhima splash screen ekata yanna kiyanawa.
+    initialLocation: '/', // App eka open weddima splash screen ekata yanna kiyanawa.
     routes: [
       // Root route - Splash Screen
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
@@ -31,7 +31,7 @@ class AppRouter {
             return QuoteDetailScreen(quote: quote);
           }
           
-          // Quote eka nethuwa ID eka wetharak thiyenawa nam, placeholder ekak pennala data refresh karanawa.
+          // Quote eka nethuwa ID eka witharak thiyenawa nam, placeholder ekak pennala data refresh karanawa.
           if (id != null) {
             return QuoteDetailScreen(
               quote: QuoteEntity(id: id, quote: 'Loading quote…', author: 'Loading'),

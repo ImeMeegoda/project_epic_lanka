@@ -2,9 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/quote_model.dart';
 
+// Remote API eken quotes laba ganna contract eka.
 abstract class QuoteRemoteDataSource {
+  // API eken random quote ekak fetch karanawa.
   Future<QuoteModel> getRandomQuote();
+
+  // Id eka anuwa specific quote ekak fetch karanawa.
   Future<QuoteModel> getQuoteById(int id);
+
+  // Quotes list ekak fetch karanawa (Pagination support karanawa).
   Future<List<QuoteModel>> getQuotes({int limit = 30, int skip = 0});
 }
 

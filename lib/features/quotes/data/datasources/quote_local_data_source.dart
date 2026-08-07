@@ -2,13 +2,27 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/quote_model.dart';
 
+// Device eke data save karana (Offline caching) contract eka.
 abstract class QuoteLocalDataSource {
+  // Aluthinma gaththu quote eka cache karanawa.
   Future<void> cacheQuote(QuoteModel quote);
+
+  // Cache karala thiyena quote eka apahu gannawa.
   Future<QuoteModel?> getCachedQuote();
+
+  // User favorite karana quote eka save karanawa.
   Future<void> saveFavoriteQuote(QuoteModel quote);
+
+  // Save karapu okkoma favorite quotes list eka gannawa.
   Future<List<QuoteModel>> getFavoriteQuotes();
+
+  // Favorite list eken quote ekak ain karanawa.
   Future<void> removeFavoriteQuote(QuoteModel quote);
+
+  // Favorites kiyak thiyenawada kiyala gaana gannawa.
   Future<int> getFavoriteCount();
+
+  // Okkoma cached data ain karanawa.
   Future<void> clearAll();
 }
 
